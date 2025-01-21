@@ -6,12 +6,21 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float attackCooldown;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject[] candy;
+    [SerializeField] private AudioClip attackSound;
+    private AudioSource audioSource;
     private Animator anim;
     private float cooldownTimer = Mathf.Infinity;
 
     private void Awake()
     {
+
+        
+        audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     private void Update()
@@ -33,6 +42,8 @@ public class PlayerAttack : MonoBehaviour
 
             candy[FindCandy()].transform.position = firePoint.position;
             candy[FindCandy()].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
+
+            PlayAttackSound();
         }
         else
         {
@@ -52,5 +63,17 @@ public class PlayerAttack : MonoBehaviour
             
         }
         return 0;
+    }
+
+    private void PlayAttackSound()
+    {
+        if (attackSound != null)
+        {
+            audioSource.PlayOneShot(attackSound); 
+        }
+        else
+        {
+            Debug.LogWarning("No attack sound assigned!");
+        }
     }
 }

@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
     {
         if (hit) return;
 
-        // Update time alive
+        
         timeAlive += Time.deltaTime;
         if (timeAlive >= timeToLive)
         {
@@ -41,12 +41,17 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("NoCollisionObjec")) return;
 
-
-        if (other.CompareTag("NoCollisionObjec"))
+        if (other.CompareTag("Boss"))
         {
-            return;
+            Boss boss = other.GetComponent<Boss>();
+            if (boss != null)
+            {
+                boss.TakeDamage(1); 
+            }
         }
+
         hit = true;
         boxCollider.enabled = false;
         anim.SetTrigger("explode");
